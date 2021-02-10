@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar?.let {
             actionBar.title = ""
-            actionBar.setLogo(R.drawable.ic_logo_pixabay)
+            actionBar.setLogo(R.drawable.ic_pixabay_logo)
             actionBar.setDisplayUseLogoEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
         }
