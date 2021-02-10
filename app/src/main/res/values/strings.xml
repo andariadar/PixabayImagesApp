@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">PixabayImages</string>
+    <string name="search_title">Search</string>
+    // colors
+    <string name="color">Color</string>
+    <string name="all">ALL</string>
+    <string name="red">red</string>
+    <string name="orange">orange</string>
+    <string name="yellow">yellow</string>
+    <string name="blue">blue</string>
+    <string name="lilac">lilac</string>
+    <string name="turquoise">turquoise</string>
+    <string name="green">green</string>
+    <string name="pink">pink</string>
+    <string name="gray">gray</string>
+    <string name="brown">brown</string>
+    <string name="black">black</string>
+    <string name="white">white</string>
+    <string name="grayscale">grayscale</string>
+    <string name="transparent">transparent</string>
+
+    // categories
+    <string name="category">Category</string>
+    <string name="backgrounds">backgrounds</string>
+    <string name="fashion">fashion</string>
+    <string name="travel">travel</string>
+    <string name="science">science</string>
+    <string name="education">education</string>
+    <string name="feelings">feelings</string>
+    <string name="health">health</string>
+    <string name="people">people</string>
+    <string name="religion">religion</string>
+    <string name="places">places</string>
+    <string name="industry">industry</string>
+    <string name="computer">computer</string>
+    <string name="food">food</string>
+    <string name="sports">sports</string>
+    <string name="buildings">buildings</string>
+    <string name="business">business</string>
+    <string name="music">music</string>
+    <string name="transportation">transportation</string>
+    <string name="animals">animals</string>
+
+    // order
+    <string name="order">Order</string>
+    <string name="popular">popular</string>
+    <string name="latest">latest</string>
+
+    <string name="reset">reset</string>
+    <string name="retry">retry</string>
+    <string name="filters">filters</string>
+    <string name="results_for_all_images">Results for all images</string>
+    <string name="results_for">Results for \"%1$s\"</string>
+    <string name="results_not_loaded">Check your internet connection and try again</string>
+</resources>
