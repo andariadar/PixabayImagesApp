@@ -52,4 +52,10 @@
     <string name="results_for_all_images">Results for all images</string>
     <string name="results_for">Results for \"%1$s\"</string>
     <string name="results_not_loaded">Check your internet connection and try again</string>
+
+    <string name="permission_denied">Permission denied</string>
+    <string name="explanation_about_permission">This permission needed because this and that</string>
+
+    <string name="download">download</string>
+    <string name="user_profile">user profile</string>
 </resources>

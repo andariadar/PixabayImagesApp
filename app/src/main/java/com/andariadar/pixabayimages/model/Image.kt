@@ -7,6 +7,10 @@ import kotlinx.parcelize.Parcelize
 data class Image(
     val id: String,
     val webformatURL: String,
+    val largeImageURL: String,
     val user: String,
+    val user_id: String,
     val likes: Int
-): Parcelable
+): Parcelable {
+    val profileUrl get() = "https://pixabay.com/users/$user-$user_id/"
+}

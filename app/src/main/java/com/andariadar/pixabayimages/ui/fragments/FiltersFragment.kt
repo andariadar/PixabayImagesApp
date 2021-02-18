@@ -30,6 +30,8 @@ class FiltersFragment: Fragment(R.layout.fragment_filters) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.setFlag(0)
+
         viewModel.currentColor.observe(viewLifecycleOwner) { allColors ->
             val colors = mutableListOf<CharSequence>()
             colors.addAll(allColors.split(","))

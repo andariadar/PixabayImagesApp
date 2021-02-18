@@ -26,6 +26,9 @@ class PixabayViewModel@Inject constructor(
     private val _currentCategory = savedStateHandle.getLiveData(CURRENT_CATEGORY, DEFAULT_CATEGORY)
     val currentCategory = _currentCategory
 
+    private val _flag = savedStateHandle.getLiveData("flag", 0)
+    val flag = _flag
+
     /*val test = currentQuery.asFlow().distinctUntilChanged().flatMapLatest { query ->
         repository.getImages(query).cachedIn(viewModelScope)
     }*/
@@ -41,6 +44,14 @@ class PixabayViewModel@Inject constructor(
      //.debounce(400)
      .flatMapLatest { (query, color, order, category) ->
         repository.getImages(query, color, order, category).cachedIn(viewModelScope)
+    }.asLiveData()
+
+    /*fun downloadImage(downloadID: Long) {
+
+    }*/
+
+    fun setFlag(flag: Int) {
+        savedStateHandle.set("flag", flag)
     }
 
     fun setQuery(query: String) {

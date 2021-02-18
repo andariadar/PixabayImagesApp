@@ -13,6 +13,7 @@ import com.andariadar.pixabayimages.R
 import com.andariadar.pixabayimages.adapters.ImagesLoadStateAdapter
 import com.andariadar.pixabayimages.adapters.ImagesPagingAdapter
 import com.andariadar.pixabayimages.databinding.FragmentImagesBinding
+import com.andariadar.pixabayimages.model.Image
 import com.andariadar.pixabayimages.ui.PixabayViewModel
 import com.andariadar.pixabayimages.utils.hide
 import com.andariadar.pixabayimages.utils.show
@@ -27,14 +28,14 @@ import java.net.URLEncoder
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class ImagesFragment: Fragment(R.layout.fragment_images) {
+class ImagesFragment: Fragment(R.layout.fragment_images), ImagesPagingAdapter.OnItemClickListener {
 
     //private val viewModel by viewModels<PixabayViewModel>()
     //private val viewModel by navGraphViewModels<PixabayViewModel>(R.id.navgraph){defaultViewModelProviderFactory}
     private val viewModel by hiltNavGraphViewModels<PixabayViewModel>(R.id.navgraph)
     private var _binding: FragmentImagesBinding? = null
     private val binding get() = _binding!!
-    private val adapter = ImagesPagingAdapter()
+    private val adapter = ImagesPagingAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +46,12 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
         return binding.root
     }
 
+    override fun onItemClick(image: Image) {
+        viewModel.setFlag(1)
+        val action = ImagesFragmentDirections.actionImagesFragmentToDetailFragment(image)
+        findNavController().navigate(action)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -53,11 +60,15 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
         // Scroll to top when the list is refreshed from network.
         lifecycleScope.launch {
             adapter.loadStateFlow
-                    // Only emit when REFRESH LoadState for RemoteMediator changes.
                     .distinctUntilChangedBy { it.refresh }
-                    // Only react to cases where Remote REFRESH completes i.e., NotLoading.
                     .filter { it.refresh is LoadState.NotLoading }
-                    .collect { binding.recyclerView.scrollToPosition(0) }
+                    .collect {
+                        viewModel.flag.observe(viewLifecycleOwner) { flag ->
+                            if(flag == 0) {
+                                binding.recyclerView.scrollToPosition(0)
+                            }
+                        }
+                    }
         }
 
         viewModel.currentQuery.observe(viewLifecycleOwner) { queryString ->
@@ -91,8 +102,6 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
                 binding.apply {
                     // Only show the list if refresh succeeds.
                     recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-                    //searchText.isVisible = loadState.source.refresh is LoadState.NotLoading
-                    //chipResetQueries.isVisible = loadState.source.refresh is LoadState.NotLoading
                     // Show loading spinner during initial load or refresh.
                     progressBar.isVisible = loadState.source.refresh is LoadState.Loading
                     // Show the retry state if initial load or refresh fails.
@@ -102,8 +111,14 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
             }
         }
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             viewModel.imagesFlow.collectLatest { images ->
+                adapter.submitData(images)
+            }
+        }*/
+
+            viewModel.imagesFlow.observe(viewLifecycleOwner) { images ->
+                lifecycleScope.launch {
                 adapter.submitData(images)
             }
         }
@@ -117,8 +132,10 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
+                    viewModel.setFlag(0)
                     val encodedQuery = URLEncoder.encode(it, "utf-8")
                     viewModel.setQuery(encodedQuery)
+                    searchView.clearFocus()
                 }
 
                 return true
@@ -128,14 +145,15 @@ class ImagesFragment: Fragment(R.layout.fragment_images) {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.filters -> {
-            val action = ImagesFragmentDirections.actionImagesFragmentToFiltersFragment()
-            findNavController().navigate(action)
-            true
-        } else -> {
-            super.onOptionsItemSelected(item)
-        }
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            R.id.filters -> {
+                val action = ImagesFragmentDirections.actionImagesFragmentToFiltersFragment()
+                findNavController().navigate(action)
+                true
+            } else -> {
+                super.onOptionsItemSelected(item)
+            }
     }
 
     override fun onDestroy() {

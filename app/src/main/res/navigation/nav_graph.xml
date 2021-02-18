@@ -16,9 +16,20 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_imagesFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/filtersFragment"
         android:name="com.andariadar.pixabayimages.ui.fragments.FiltersFragment"
         tools:layout="@layout/fragment_filters" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.andariadar.pixabayimages.ui.fragments.DetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="image"
+            app:argType="com.andariadar.pixabayimages.model.Image" />
+    </fragment>
 </navigation>

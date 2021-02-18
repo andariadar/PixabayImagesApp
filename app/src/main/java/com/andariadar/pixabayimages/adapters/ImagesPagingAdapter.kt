@@ -11,8 +11,20 @@ import com.andariadar.pixabayimages.model.Image
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class ImagesPagingAdapter: PagingDataAdapter<Image, ImagesPagingAdapter.ImagesViewHolder>(ImageComparator) {
+class ImagesPagingAdapter(private val listener: OnItemClickListener): PagingDataAdapter<Image, ImagesPagingAdapter.ImagesViewHolder>(ImageComparator) {
     inner class ImagesViewHolder(private val binding: ItemImageBinding): RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener{
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = getItem(position)
+                    if (item != null) {
+                        listener.onItemClick(item)
+                    }
+                }
+            }
+        }
+
         fun bind(image: Image) {
             binding.apply {
                 user.text = image.user
@@ -39,6 +51,12 @@ class ImagesPagingAdapter: PagingDataAdapter<Image, ImagesPagingAdapter.ImagesVi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImagesViewHolder {
         val binding = ItemImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImagesViewHolder(binding)
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(image: Image) {
+
+        }
     }
 
     object ImageComparator: DiffUtil.ItemCallback<Image>(){
